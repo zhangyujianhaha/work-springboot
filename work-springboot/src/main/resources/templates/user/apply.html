@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Home</title>
+  <!-- Font Awesome -->
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="/css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="/css/style.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/webjars/layui/2.5.5/css/layui.css}">
+  <script src="/webjars/jquery/3.3.1/jquery.js"></script>
+  <script src="/webjars/highcharts/4.0.4/highcharts.js"></script>
+  <style>
+    #userTable{
+      width: 500px;
+    }
+  </style>
+</head>
+<body class="grey lighten-3">
+  <!--Main Navigation-->
+  <header>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+      <div class="container-fluid">
+        <!-- Brand -->
+        <a class="navbar-brand waves-effect"  target="_blank">
+          <strong class="blue-text">大学生就业平台</strong>
+        </a>
+
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+          <!-- Left -->
+          <ul class="navbar-nav mr-auto">
+
+          </ul>
+
+          <!-- Right -->
+          <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item">
+              <a href="#" class="nav-link waves-effect" >
+                用户名：<label th:text="${session.user.username}"></label>
+              </a>
+            </li>&nbsp;&nbsp;&nbsp;
+            <li class="nav-item">
+              <a href="/login/out" class="nav-link waves-effect" >
+                退出
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-fixed position-fixed">
+
+      <a class="logo-wrapper waves-effect">
+        <h2>哈皮招聘</h2>
+      </a>
+
+      <div class="list-group list-group-flush">
+        <a href="/user/recruit.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-table mr-3"></i>首页</a>
+        <a href="/user/user.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-user mr-3"></i>个人信息</a>
+
+        <a href="/user/join.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-map mr-3"></i>求职意向</a>
+        <a href="/user/interview.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-chart-pie mr-3"></i>面试邀请
+        </a>
+        <a href="/user/apply.html" class="list-group-item active waves-effect">
+          <i class="fas fa-money-bill-alt mr-3"></i>我的求职</a>
+
+      </div>
+
+    </div>
+    <!-- Sidebar -->
+
+  </header>
+  <main class="pt-5 mx-lg-5">
+  <div  class="container-fluid mt-5">
+
+
+
+
+    <div id="did">
+
+      <table class="layui-hide" align="center" id="userTable" lay-filter="userTable"></table>
+    </div>
+    </div>
+  </main>
+
+
+  <script th:src="@{/webjars/layui/2.5.5/layui.js}"></script>
+  <script type="text/javascript">
+    //Demo
+    layui.use(['jquery','layer','table','form','laydate'], function(){
+      var $=layui.jquery;
+      var layer=layui.layer;
+      var table=layui.table;
+      var form=layui.form;
+
+      var tableIns=table.render({
+        elem: '#userTable'   //渲染的目标对象
+        ,url:'/user/apply' //数据接口
+        ,title: '表'//数据导出来的标题
+        /* ,toolbar:"<div>xxx</div>" */
+        //,toolbar:"#userToolBar"   //表格的工具条
+        ,defaultToolbar:['filter','exports']
+        /* ,height:300 */
+        ,height:'full-200'
+        ,width:'1081'
+        ,cellMinWidth:100 //设置列的最小默认宽度
+        ,done:function(res, curr, count){
+          /* alert(res);//后台url返回的json串
+          alert(curr);//当前页
+          alert(count);//数据总条数 */
+        }
+        ,totalRow:true //开启合并行
+        ,page: true  //是否启用分页
+        /*   ,limit:20 //设置每页显示条数 默认为10
+          ,limits:[20,40,60,80] */
+        ,text:{
+          none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+        }
+        ,cols: [
+          [   //列表数据
+            {field:'applyid', title:'编号', width:120,sort:true}
+            ,{field:'userid', title:'用户编号',sort:true,align:'center'}
+            ,{field:'username', title:'用户姓名',sort:true,align:'center'}
+            ,{field:'companyid', title:'公司编号',sort:true,align:'center'}
+            ,{field:'companyname', title:'公司名',sort:true,align:'center'}
+            ,{field:'recruitid', title:'岗位编号',sort:true,align:'center'}
+            ,{field:'recruitmajor', title:'岗位名称',sort:true,align:'center'}
+            ,{field:'states', title:'状态',sort:true,align:'center'}
+          ]
+        ]
+      });
+
+
+
+    });
+  </script>
+</body>
+
+</html>

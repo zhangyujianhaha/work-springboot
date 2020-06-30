@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Home</title>
+  <!-- Font Awesome -->
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="/css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="/css/style.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/webjars/layui/2.5.5/css/layui.css}">
+  <script src="/webjars/jquery/3.3.1/jquery.js"></script>
+  <script src="/webjars/highcharts/4.0.4/highcharts.js"></script>
+  <style>
+    #userTable{
+      width: 500px;
+    }
+  </style>
+</head>
+<body class="grey lighten-3">
+  <!--Main Navigation-->
+  <header>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+      <div class="container-fluid">
+        <!-- Brand -->
+        <a class="navbar-brand waves-effect"  target="_blank">
+          <strong class="blue-text">大学生就业平台</strong>
+        </a>
+
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+          <!-- Left -->
+          <ul class="navbar-nav mr-auto">
+
+          </ul>
+
+          <!-- Right -->
+          <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item">
+              <a href="#" class="nav-link waves-effect" >
+                公司名：<label th:text="${session.user.companyname}"></label>
+              </a>
+            </li>&nbsp;&nbsp;&nbsp;
+            <li class="nav-item">
+              <a href="/login/out" class="nav-link waves-effect">
+                退出
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-fixed position-fixed">
+
+      <a class="logo-wrapper waves-effect">
+        <h2>哈皮招聘</h2>
+      </a>
+
+      <div class="list-group list-group-flush">
+        <a href="/company/join.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-table mr-3"></i>首页</a>
+        <a href="/company/company.html" class="list-group-item active waves-effect">
+          <i class="fas fa-user mr-3"></i>公司信息</a>
+
+        <a href="/company/recruit.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-map mr-3"></i>发布职位</a>
+        <a href="/company/interview.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-chart-pie mr-3"></i>求职管理
+        </a>
+        <a href="/company/apply.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-money-bill-alt mr-3"></i>面试管理</a>
+
+
+      </div>
+
+    </div>
+    <!-- Sidebar -->
+
+  </header>
+  <main class="pt-5 mx-lg-5">
+  <div  class="container-fluid mt-5">
+    <div align="center" >
+      <table id="tid" style="width: 700px" border="1" align="center" class="layui-table" lay-size="lg"   lay-skin="line row" lay-even>
+        <tr >
+          <td width="17%">公司编号</td>
+          <td width="17%" th:text="${session.user.companyid}"></td>
+          <td width="17%">公司名</td>
+          <td width="17%" th:text="${session.user.companyname}"></td>
+
+        </tr>
+        <tr>
+          <td width="17%">公司规模</td>
+          <td width="17%" th:text="${session.user.comguimo}==null?'未录入':${session.user.comguimo}"></td>
+          <td width="17%" >公司类型</td>
+          <td width="17%" th:text="${session.user.comleixing}"></td>
+        </tr>
+        <tr>
+          <td width="17%">公司简介</td>
+          <td colspan="3" th:text="${session.user.comjianjie}==null?'未录入':${session.user.comjianjie}"></td>
+        </tr>
+        <tr>
+          <td width="17%">公司详细地址</td>
+          <td width="17%" colspan="3" th:text="${session.user.comaddress}==null?'未录入':${session.user.comaddress}"></td>
+        </tr>
+        <tr>
+          <td width="17%">创办时间</td>
+          <td width="17%" th:text="${session.user.comstarttime}==null?'未录入':${session.user.comstarttime}"></td>
+          <td width="17%" >联系电话</td>
+          <td width="17%" th:text="${session.user.companytel}==null?'未录入':${session.user.companytel}"></td>
+        </tr>
+
+        <tr>
+
+          <td width="17%" colspan="2" ><button id="jianli" class="layui-btn layui-btn-normal">查看公司图片</button></td>
+          <td width="17%" colspan="2" ><button id="updateButton" class="layui-btn layui-btn-normal">编辑公司信息</button></td>
+        </tr>
+
+
+      </table>
+      <input id="comphoto" type="hidden" th:value="${session.user.comphoto}">
+
+    </div>
+
+
+
+    </div>
+  </main>
+<div id="jianlidiv" style="display: none">
+  <img id="imgid" style="width: 600px;height: 600px" src="/">
+
+</div>
+  <div align="center" id="updateUser" style="display: none">
+    <form id="dataFrm" enctype="multipart/form-data" action="/company/updatecompany" method="post" lay-filter="dataFrm" class="layui-form">
+    <table id="" style="width: 750px" border="1" align="center" class="layui-table"    lay-skin="line row" lay-even>
+      <tr >
+        <td width="25%">公司编号</td>
+        <td width="25%" th:text="${session.user.companyid}"></td>
+        <td width="25%">公司名</td>
+        <td width="25%" ><input type="text"  name="companyname" th:value="${session.user.companyname}" lay-verify="required"    class="layui-input"></td>
+
+      </tr>
+      <tr>
+        <td width="25%">公司规模</td>
+        <td width="25%" >
+          <select name="comguimo" class="layui-select" lay-verify="required"  >
+            <option  style="width: 200px" value="<100人" th:selected="${session.user.comguimo eq '<100人'}" ><100人</option>
+            <option  style="width: 200px" value="100-500人" th:selected="${session.user.comguimo eq '100-500人'}" >100-500人</option>
+            <option  style="width: 200px" value="500-1000人" th:selected="${session.user.comguimo eq '500-1000人'}" >500-1000人</option>
+            <option  style="width: 200px" value="1000-5000人" th:selected="${session.user.comguimo eq '1000-5000人'}" >1000-5000人</option>
+            <option  style="width: 200px" value=">5000人" th:selected="${session.user.comguimo eq '>5000人'}" >>5000人</option>
+          </select>
+
+        </td>
+        <td width="25%" >公司类型</td>
+        <td width="25%" >
+          <select class="layui-select" name="comleixing"    >
+            <option  style="width: 200px" value="金融" th:selected="${session.user.comleixing eq '金融'}" >金融</option>
+            <option  style="width: 200px" value="互联网" th:selected="${session.user.comleixing eq '互联网'}" >互联网</option>
+            <option  style="width: 200px" value="教育" th:selected="${session.user.comleixing eq '教育'}" >教育</option>
+            <option  style="width: 200px" value="销售" th:selected="${session.user.comleixing eq '销售'}" >销售</option>
+            <option  style="width: 200px" value="房地产" th:selected="${session.user.comleixing eq '房地产'}" >房地产</option>
+            <option  style="width: 200px" value="建筑" th:selected="${session.user.comleixing eq '建筑'}" >建筑</option>
+            <option  style="width: 200px" value="体育/娱乐" th:selected="${session.user.comleixing eq '体育/娱乐'}" >体育/娱乐</option>
+            <option  style="width: 200px" value="其他" th:selected="${session.user.comleixing eq '其他'}" >其他</option>
+          </select></td>
+      </tr>
+      <tr>
+        <td width="25%">公司简介</td>
+        <td width="25%" colspan="3" >
+          <input type="text"  name="comjianjie" th:value="${session.user.comjianjie}"  lay-verify="required"   class="layui-input">
+        </td>
+      </tr>
+      <tr>
+        <td width="25%">公司详细地址</td>
+        <td width="25%" colspan="3" ><input type="text"  name="comaddress" th:value="${session.user.comaddress}"  lay-verify="required"   class="layui-input"></td>
+      </tr>
+      <tr>
+        <td width="25%">创办时间</td>
+        <td width="25%" ><input type="text" id="comstarttime"  name="comstarttime" th:value="${session.user.comstarttime}" lay-verify="required"    class="layui-input"></td>
+        <td width="25%" >联系电话</td>
+        <td width="25%" >
+          <input type="text" name="companytel" th:value="${session.user.companytel}" lay-verify="required|phone"    class="layui-input">
+        </td>
+      </tr>
+
+      <tr>
+        <td width="25%" colspan="2" > <input name="comp" type="file" /></td>
+        <input name="companyid" type="hidden" th:value="${session.user.companyid}">
+        <td colspan="2">
+          <input class="layui-btn layui-btn-normal" type="submit" lay-filter="doSubmit" lay-submit="" th:value="提交">
+        </td>
+
+      </tr>
+
+    </table>
+
+    </form>
+
+  </div>
+
+  <script th:src="@{/webjars/layui/2.5.5/layui.js}"></script>
+  <script type="text/javascript">
+    //Demo
+    layui.use(['jquery','layer','table','form','laydate'], function(){
+      var $=layui.jquery;
+      var layer=layui.layer;
+      var table=layui.table;
+      var form=layui.form;
+      var laydate=layui.laydate;
+      var mainIndex;
+      form.verify({
+        username:[
+          /^[\u4e00-\u9fa5]{0,}$/
+          ,'用户姓名必须为纯汉字'
+
+        ]
+      });
+      laydate.render({
+        elem:'#comstarttime',
+        type:'date'
+
+      });
+
+      $("#jianli").click(function () {
+        var userjianli=$("#comphoto").val();
+        $("#imgid").attr("src","/files/"+userjianli);
+        layer.open({
+          type:1,
+          title:'公司图片',
+          content:$("#jianlidiv"),
+          area:['600px','600px'],
+
+        });
+
+      });
+      $("#updateButton").click(function () {
+          mainIndex=layer.open({
+            type:1,
+            title:'编辑公司信息',
+            content:$("#updateUser"),
+            area:['800px','600px'],
+
+          });
+
+
+
+      });
+
+
+
+
+
+      //表单提交
+      /*form.on("submit(doSubmit)",function(obj){
+        var params=$("#dataFrm").serialize();
+          /!*$.post("/user/updateuser",params,function(obj){
+            layer.msg(obj.msg);
+            //关闭弹出层
+            layer.close(mainIndex)
+            //刷新数据 表格
+            location.href="/user/user.html";
+          })*!/
+
+       /!* $.ajax({
+          url : "/user/updateuser",
+          type : 'POST',
+          dataType: 'json',
+          data : params,
+          cache: false,
+          async: false,
+          processData : false,
+          contentType : false,
+
+          success: function (data) {
+
+          },
+
+        });*!/
+
+
+      });*/
+
+    });
+  </script>
+</body>
+
+</html>

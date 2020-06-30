@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Home</title>
+  <!-- Font Awesome -->
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="/css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="/css/style.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/webjars/layui/2.5.5/css/layui.css}">
+  <script src="/webjars/jquery/3.3.1/jquery.js"></script>
+  <script src="/webjars/highcharts/4.0.4/highcharts.js"></script>
+  <style>
+    #userTable{
+      width: 500px;
+    }
+  </style>
+</head>
+<body class="grey lighten-3">
+  <!--Main Navigation-->
+  <header>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+      <div class="container-fluid">
+        <!-- Brand -->
+        <a class="navbar-brand waves-effect"  target="_blank">
+          <strong class="blue-text">大学生就业平台</strong>
+        </a>
+
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+          <!-- Left -->
+          <ul class="navbar-nav mr-auto">
+
+          </ul>
+
+          <!-- Right -->
+          <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item">
+              <a href="#" class="nav-link waves-effect" >
+                用户名：<label th:text="${session.user.username}"></label>
+              </a>
+            </li>&nbsp;&nbsp;&nbsp;
+            <li class="nav-item">
+              <a href="/login/out" class="nav-link waves-effect" >
+                退出
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-fixed position-fixed">
+
+      <a class="logo-wrapper waves-effect">
+        <h2>哈皮招聘</h2>
+      </a>
+
+      <div class="list-group list-group-flush">
+        <a href="/user/recruit.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-table mr-3"></i>首页</a>
+        <a href="/user/user.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-user mr-3"></i>个人信息</a>
+
+        <a href="/user/join.html" class="list-group-item list-group-item-action waves-effect">
+          <i class="fas fa-map mr-3"></i>求职意向</a>
+        <a href="/user/interview.html" class="list-group-item active waves-effect">
+          <i class="fas fa-chart-pie mr-3"></i>面试邀请
+        </a>
+        <a href="/user/apply.html" class="list-group-item list-group-item-action  waves-effect">
+          <i class="fas fa-money-bill-alt mr-3"></i>我的求职</a>
+
+      </div>
+
+    </div>
+    <!-- Sidebar -->
+
+  </header>
+  <main class="pt-5 mx-lg-5">
+  <div  class="container-fluid mt-5">
+
+
+
+    <div id="did">
+
+      <table class="layui-hide" align="center" id="userTable" lay-filter="userTable"></table>
+    </div>
+    </div>
+  </main>
+
+
+  <script th:src="@{/webjars/layui/2.5.5/layui.js}"></script>
+  <script type="text/javascript">
+    //Demo
+    layui.use(['jquery','layer','table','form','laydate'], function(){
+      var $=layui.jquery;
+      var layer=layui.layer;
+      var table=layui.table;
+      var form=layui.form;
+      var laydate=layui.laydate;
+      laydate.render({
+        elem:'#intertime',
+        type:'datetime'
+
+      });
+
+      var tableIns=table.render({
+        elem: '#userTable'   //渲染的目标对象
+        ,url:'/user/interview' //数据接口
+        ,title: '表'//数据导出来的标题
+        /* ,toolbar:"<div>xxx</div>" */
+        //,toolbar:"#userToolBar"   //表格的工具条
+        ,defaultToolbar:['filter','exports']
+        /* ,height:300 */
+        ,height:'full-200'
+        ,width:'1281'
+        ,cellMinWidth:100 //设置列的最小默认宽度
+        ,done:function(res, curr, count){
+          /* alert(res);//后台url返回的json串
+          alert(curr);//当前页
+          alert(count);//数据总条数 */
+        }
+        ,totalRow:true //开启合并行
+        ,page: true  //是否启用分页
+        /*   ,limit:20 //设置每页显示条数 默认为10
+          ,limits:[20,40,60,80] */
+        ,text:{
+          none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+        }
+        ,cols: [
+          [   //列表数据
+            {field:'interviewid', title:'面试编号', width:120,sort:true}
+            ,{field:'userid', title:'用户编号',sort:true,align:'center'}
+            ,{field:'username', title:'用户姓名',sort:true,align:'center'}
+            ,{field:'companyid', title:'公司编号',sort:true,align:'center'}
+            ,{field:'companyname', title:'公司名',sort:true,align:'center'}
+            ,{field:'recruitid', title:'岗位编号',sort:true,align:'center'}
+            ,{field:'recrmajor', title:'岗位名称',sort:true,align:'center'}
+            ,{field:'intertime', title:'面试时间',sort:true,align:'center'}
+            ,{field:'interaddress', title:'面试地点',sort:true,align:'center'}
+          ]
+        ]
+      });
+
+
+      table.on("tool(userTable)",function (obj) {
+        switch(obj.event){
+          case 'serachuser':
+            openUpdateUser(obj.data);
+            break;
+          case 'serachjianli':
+            $.post(
+                    "/company/showuser",
+                    obj.data,
+                    function (data) {
+                      $("#imgid").attr("src","/files/"+data.userjianli);
+                      mainIndex=layer.open({
+                        type:1,
+                        title:'查看用户简历',
+                        content:$("#jianlidiv"),
+                        area:['600px','600px'],
+
+                      });
+
+                    }
+            );
+            break;
+          case 'del':
+            $.post(
+                    "/company/jujueuser",
+                    obj.data,
+                    function (data) {
+                      layer.msg(data.msg);
+                      tableIns.reload();
+
+                    }
+            );
+            break;
+          case 'mianshi':
+            $("#companyid").html(obj.data.companyid);
+            $("#companyname").html(obj.data.companyname);
+            $("#userid").html(obj.data.userid);
+            $("#username").html(obj.data.username);
+            $("#recruitid").html(obj.data.recruitid);
+            $("#recruidmajor").html(obj.data.recruitmajor);
+            $("#auserid").val(obj.data.userid);
+            $("#ausername").val(obj.data.username);
+            $("#acompanyid").val(obj.data.companyid);
+            $("#acompanyname").val(obj.data.companyname);
+            $("#arecruitid").val(obj.data.recruitid);
+            $("#arecrmajor").val(obj.data.recruidmajor);
+            $("#aapplyid").val(obj.data.applyid);
+            layer.open({
+              type:1,
+              title:'面试信息',
+              content:$("#interview"),
+              area:['800px','500px'],
+
+            });
+            break;
+
+        };
+
+      });
+      function openUpdateUser(data){
+        $.post(
+                "/company/showuser",
+                data,
+                function (data) {
+                  $("#usernamea").html(data.username);
+                  $("#userida").html(data.userid);
+                  $("#usersexa").html(data.usersex);
+                  $("#usertela").html(data.usertel);
+                  $("#userxuelia").html(data.userxueli);
+                  $("#usermajora").html(data.usermajor);
+                  $("#userjinglia").html(data.userjingli);
+                  $("#usercarda").html(data.usercard);
+                  $("#userminzua").html(data.userminzu);
+                  $("#userqqa").html(data.userqq);
+                  $("#userwechata").html(data.userwechat);
+                  $("#userbrithday").html(data.userbrithday);
+                  mainIndex=layer.open({
+                    type:1,
+                    title:'查看用户',
+                    content:$("#user"),
+                    area:['800px','500px'],
+
+                  });
+
+                }
+        );
+
+      }
+
+      //表单提交
+      form.on("submit(doSubmit)",function(obj){
+        var params=$("#dataFrm").serialize();
+        $.post(
+                "/company/addinterview",
+                params,
+                function (data) {
+                  layer.msg(data.msg);
+                  tableIns.reload();
+
+                }
+        );
+      });
+
+
+
+    });
+  </script>
+</body>
+
+</html>
