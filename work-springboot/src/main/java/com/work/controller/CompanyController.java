@@ -30,6 +30,7 @@ public class CompanyController {
     public DataGridView adminCompany(Company company, @RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                                   HttpServletRequest request){
         System.out.println("aa");
+        System.out.println("aaaaaaaa");
         QueryWrapper<Company> wrapper=new QueryWrapper();
         wrapper.like(company.getCompanyid()!=null&&!company.getCompanyid().equals(""),"companyid",company.getCompanyid())
                 .like(company.getCompanyname()!=null&&!company.getCompanyname().equals(""),"companyname",company.getCompanyname())
