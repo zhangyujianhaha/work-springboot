@@ -33,6 +33,7 @@ public class CompanyController {
         System.out.println("aaaaaaaa");
         System.out.println("aaa");
         System.out.println("主干");
+        System.out.println("分支添加");
         QueryWrapper<Company> wrapper=new QueryWrapper();
         wrapper.like(company.getCompanyid()!=null&&!company.getCompanyid().equals(""),"companyid",company.getCompanyid())
                 .like(company.getCompanyname()!=null&&!company.getCompanyname().equals(""),"companyname",company.getCompanyname())
